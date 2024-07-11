@@ -12,6 +12,8 @@ public class Room
 
     public void EnterRoom()
     {
+
+        // The user will enter the room and the event will start 
         System.Console.WriteLine(Description);
         if (HasEvent)
         {

@@ -31,6 +31,9 @@ public class Game
         bool playing = true;
         while (playing)
         {
+
+            // The user will have to choose three option
+            
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1. Move to a available room");
             Console.WriteLine("2. View your character stats");
