@@ -10,6 +10,7 @@ public class Game
 
     public Game()
     {
+        player = new Character("Default"); // Initialize player with a default value
         rooms = new List<Room>
         {
             new Room("You enter a dark cave.", true),
@@ -24,8 +25,8 @@ public class Game
     {
         Console.WriteLine("Welcome...to the Adventure Game!");
         Console.WriteLine("Please Enter Your Character Name: ");
-        string name = Console.ReadLine();
-        player = new Character(name);
+        string name = Console.ReadLine() ?? "Default";
+        player = new Character(name ?? "Default");
         player.DisplayStats();
 
         bool playing = true;
