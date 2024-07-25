@@ -9,7 +9,7 @@ namespace EldenRingApp.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("YourConnectionStringHere");
+            optionsBuilder.UseSqlServer("Server=localhost;Database=EldenRingApp;User=sa;Password=IamNotATarnished123!;TrustServerCertificate=true;");
         }
     }
 }
