@@ -1,9 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using EldenRingApp.Data;
 using EldenRingApp.Models;
 using EldenRingApp.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace EldenRingApp.Repositories.Implementations
 {
@@ -16,35 +15,40 @@ namespace EldenRingApp.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<Character>> GetAllAsync()
+        public Character GetCharacterById(int id)
         {
-            return await _context.Characters.ToListAsync();
+            var character = _context.Characters.Find(id);
+            if (character == null)
+            {
+                throw new InvalidOperationException("Character not found");
+            }
+            return character;
         }
 
-        public async Task<Character> GetByIdAsync(int id)
+        public IEnumerable<Character> GetAllCharacters()
         {
-            return await _context.Characters.FindAsync(id);
+            return _context.Characters.ToList();
         }
 
-        public async Task AddAsync(Character character)
+        public void AddCharacter(Character character)
         {
-            await _context.Characters.AddAsync(character);
-            await _context.SaveChangesAsync();
+            _context.Characters.Add(character);
+            _context.SaveChanges();
         }
 
-        public async Task UpdateAsync(Character character)
+        public void UpdateCharacter(Character character)
         {
             _context.Characters.Update(character);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public async Task DeleteAsync(int id)
+        public void DeleteCharacter(int id)
         {
-            var character = await _context.Characters.FindAsync(id);
+            var character = _context.Characters.Find(id);
             if (character != null)
             {
                 _context.Characters.Remove(character);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
         }
     }

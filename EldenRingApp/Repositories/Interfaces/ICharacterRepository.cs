@@ -1,15 +1,14 @@
-using EldenRingApp.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using EldenRingApp.Models;
 
 namespace EldenRingApp.Repositories.Interfaces
 {
     public interface ICharacterRepository
     {
-        Task<IEnumerable<Character>> GetAllAsync();
-        Task<Character> GetByIdAsync(int id);
-        Task AddAsync(Character character);
-        Task UpdateAsync(Character character);
-        Task DeleteAsync(int id);
+        Character? GetCharacterById(int id); // Allow nullable return type
+        IEnumerable<Character> GetAllCharacters();
+        void AddCharacter(Character character);
+        void UpdateCharacter(Character character);
+        void DeleteCharacter(int id);
     }
 }
