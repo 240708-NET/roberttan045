@@ -46,6 +46,7 @@ namespace EldenRingApp
         public void Run()
         {
             Console.WriteLine("Welcome Tarnished, to the Elden Ring!");
+            Console.WriteLine("Tarnished, Choose your class before you start your hellish journey in Elden Ring");
         }
     }
 }
