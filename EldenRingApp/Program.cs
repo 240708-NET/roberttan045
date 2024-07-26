@@ -45,7 +45,7 @@ namespace EldenRingApp
 
         public void Run()
         {
-            // Implement interaction logic here (add, retrieve, update, delete characters)
+            Console.WriteLine("Welcome Tarnished, to the Elden Ring!");
         }
     }
 }
