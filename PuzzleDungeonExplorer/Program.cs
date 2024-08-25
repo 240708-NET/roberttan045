@@ -18,19 +18,25 @@ namespace PuzzleDungeonExplorer
             host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddDbContext<PuzzleDungeonContext>(options =>
-                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("DefaultConnection")));
+       public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            config.SetBasePath(Directory.GetCurrentDirectory());
+            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        })
+        .ConfigureServices((hostContext, services) =>
+        {
+            services.AddDbContext<PuzzleDungeonContext>(options =>
+                options.UseSqlServer(hostContext.Configuration.GetConnectionString("DefaultConnection")));
 
-                    // Register other services, repositories, etc.
-                });
+            services.AddScoped<IDungeonRepository, DungeonRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IPuzzleRepository, PuzzleRepository>();
+            services.AddScoped<ITrapRepository, TrapRepository>();
+            services.AddScoped<IPlayerRepository, PlayerRepository>();
+
+            // Register other services, repositories, etc.
+        });
     }
 }
