@@ -16,6 +16,15 @@ namespace PuzzleDungeonExplorer.Data
         public DbSet<Trap> Traps { get; set; }
         public DbSet<Player> Players { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                // Set the connection string directly here
+                optionsBuilder.UseSqlServer("Server=localhost;Database=PuzzleDungeonExplorer;User Id=sa;Password=IamNotATarnished123!;TrustServerCertificate=true;");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

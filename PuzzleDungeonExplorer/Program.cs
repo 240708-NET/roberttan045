@@ -1,20 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using PuzzleDungeonExplorer.Data;
-using PuzzleDungeonExplorer.Repositories;
-using PuzzleDungeonExplorer.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
+using PuzzleDungeonExplorer.Services; // For GameService
+using PuzzleDungeonExplorer.Data;     // For PuzzleDungeonContext
+using PuzzleDungeonExplorer.Repositories; // For repository interfaces
 
 namespace PuzzleDungeonExplorer
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
             var gameService = host.Services.GetRequiredService<GameService>();
             gameService.StartGame();
         }

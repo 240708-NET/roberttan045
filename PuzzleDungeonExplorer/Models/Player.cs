@@ -7,6 +7,7 @@ namespace PuzzleDungeonExplorer.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int Health { get; set; }
+        public int Score { get; set; }
         public List<Room> VisitedRooms { get; set; }
     }
 }

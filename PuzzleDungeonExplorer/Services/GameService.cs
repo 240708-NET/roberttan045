@@ -7,6 +7,8 @@ namespace PuzzleDungeonExplorer.Services
 {
     public class GameService
     {
+        private Player player;
+        private Dungeon dungeon;
         private readonly IDungeonRepository _dungeonRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IPuzzleRepository _puzzleRepository;
@@ -31,19 +33,25 @@ namespace PuzzleDungeonExplorer.Services
         {
             Console.WriteLine("Welcome to the Puzzle Dungeon Explorer!");
 
-            // Load or create a new dungeon
-            var dungeon = LoadDungeon();
+            dungeon = LoadDungeon();
+            player = LoadPlayer();
 
-            // Create or load player
-            var player = LoadPlayer();
-
-            // Start the main game loop
             MainGameLoop(dungeon, player);
+        }
+
+        private void SaveGame(Player player, Dungeon dungeon)
+        {
+            // Implement save logic here
+        }
+
+        private (Player, Dungeon) LoadGame()
+        {
+            // Implement load logic here
+            return (new Player(), new Dungeon());
         }
 
         private Dungeon LoadDungeon()
         {
-            // Here you could add logic to load an existing dungeon or create a new one
             var dungeon = _dungeonRepository.GetAllDungeons().FirstOrDefault();
 
             if (dungeon == null)
@@ -58,7 +66,6 @@ namespace PuzzleDungeonExplorer.Services
 
         private Player LoadPlayer()
         {
-            // Here you could add logic to load an existing player or create a new one
             var player = _playerRepository.GetAllPlayers().FirstOrDefault();
 
             if (player == null)
@@ -80,7 +87,9 @@ namespace PuzzleDungeonExplorer.Services
                 Console.WriteLine("\nWhat would you like to do?");
                 Console.WriteLine("1. Explore a room");
                 Console.WriteLine("2. View player status");
-                Console.WriteLine("3. Exit game");
+                Console.WriteLine("3. Save game");
+                Console.WriteLine("4. Load game");
+                Console.WriteLine("5. Exit game");
 
                 var choice = Console.ReadLine();
 
@@ -93,6 +102,14 @@ namespace PuzzleDungeonExplorer.Services
                         DisplayPlayerStatus(player);
                         break;
                     case "3":
+                        SaveGame(player, dungeon);
+                        break;
+                    case "4":
+                        var gameState = LoadGame();
+                        player = gameState.Item1;
+                        dungeon = gameState.Item2;
+                        break;
+                    case "5":
                         gameRunning = false;
                         Console.WriteLine("Thank you for playing!");
                         break;
@@ -105,10 +122,9 @@ namespace PuzzleDungeonExplorer.Services
 
         private void ExploreRoom(Dungeon dungeon, Player player)
         {
-            // Logic for exploring rooms, solving puzzles, and interacting with traps
             Console.WriteLine("\nYou enter a room...");
 
-            var room = dungeon.Rooms.FirstOrDefault(); // Placeholder for room selection logic
+            var room = dungeon.Rooms.FirstOrDefault();
             if (room == null)
             {
                 room = new Room { RoomName = "Dark Chamber", Description = "A dimly lit room with a strange atmosphere.", Puzzles = new System.Collections.Generic.List<Puzzle>(), Traps = new System.Collections.Generic.List<Trap>(), Dungeon = dungeon };
@@ -126,26 +142,12 @@ namespace PuzzleDungeonExplorer.Services
 
             Console.WriteLine($"You are in {room.RoomName}. {room.Description}");
 
-            // Placeholder logic for solving puzzles and avoiding traps
             SolvePuzzlesInRoom(room);
             HandleTrapsInRoom(room, player);
         }
 
         private void SolvePuzzlesInRoom(Room room)
         {
-            if (room.Puzzles.Count == 0)
-            {
-                var puzzle = new Puzzle { PuzzleType = "Riddle", Difficulty = "Medium", Solution = "Answer", Room = room };
-                _puzzleRepository.AddPuzzle(puzzle);
-                _puzzleRepository.Save();
-
-                room.Puzzles.Add(puzzle);
-                _roomRepository.UpdateRoom(room);
-                _roomRepository.Save();
-
-                Console.WriteLine("You encounter a puzzle: A riddle to solve!");
-            }
-
             foreach (var puzzle in room.Puzzles)
             {
                 Console.WriteLine($"Puzzle: {puzzle.PuzzleType} (Difficulty: {puzzle.Difficulty})");
@@ -155,6 +157,7 @@ namespace PuzzleDungeonExplorer.Services
                 if (answer.Equals(puzzle.Solution, StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine("Correct! You solved the puzzle.");
+                    player.Score += 10;
                 }
                 else
                 {
@@ -165,19 +168,6 @@ namespace PuzzleDungeonExplorer.Services
 
         private void HandleTrapsInRoom(Room room, Player player)
         {
-            if (room.Traps.Count == 0)
-            {
-                var trap = new Trap { TrapType = "Spikes", Damage = 10, DisarmCondition = "Carefully step over", Room = room };
-                _trapRepository.AddTrap(trap);
-                _trapRepository.Save();
-
-                room.Traps.Add(trap);
-                _roomRepository.UpdateRoom(room);
-                _roomRepository.Save();
-
-                Console.WriteLine("You notice a trap: Spikes protruding from the floor!");
-            }
-
             foreach (var trap in room.Traps)
             {
                 Console.WriteLine($"Trap: {trap.TrapType} (Damage: {trap.Damage})");
@@ -187,6 +177,7 @@ namespace PuzzleDungeonExplorer.Services
                 if (action.Equals("Disarm", StringComparison.OrdinalIgnoreCase) && trap.DisarmCondition.Equals("Carefully step over", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine("You carefully disarm the trap and proceed safely.");
+                    player.Score += 5;
                 }
                 else
                 {
@@ -201,6 +192,7 @@ namespace PuzzleDungeonExplorer.Services
         {
             Console.WriteLine($"\nPlayer: {player.Name}");
             Console.WriteLine($"Health: {player.Health}");
+            Console.WriteLine($"Score: {player.Score}");
             Console.WriteLine($"Rooms visited: {player.VisitedRooms.Count}");
         }
     }
