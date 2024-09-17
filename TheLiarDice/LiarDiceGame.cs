@@ -202,6 +202,9 @@ public class LiarDiceGame
         Console.WriteLine($"{challenger.Name} is out of the game!");
     }
 
+    // Display updated dice counts for all players
+    ShowPlayerDice();
+
     // End the round and prepare for the next round
     return true;
 }
